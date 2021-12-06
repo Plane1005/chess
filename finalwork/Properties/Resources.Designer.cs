@@ -49,6 +49,30 @@ namespace finalwork.Properties
                 return resourceMan;
             }
         }
+        internal static System.Drawing.Bitmap 黑棋
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("黑棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        internal static System.Drawing.Bitmap 标记
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("标记", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        internal static System.Drawing.Bitmap 白棋
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("白棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
 
         /// <summary>
         ///   重写当前线程的 CurrentUICulture 属性，对
