@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace 五子棋单机版
+namespace finalwork
 {
     class C_Num                     //循环数,从1到Num再到1，循环变化
     {
