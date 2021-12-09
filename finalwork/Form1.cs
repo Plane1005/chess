@@ -139,6 +139,74 @@ namespace finalwork
             Height = Height - ClientSize.Height + pictureBox1.Height;
             pass();
         }
+
+
+        private void button1_Click_1(object sender, EventArgs e)//悔棋
+        {
+            int preX, preY, prePlayer;
+            for (int i = 0; i < 2; i++)
+                if (qipan.num > 0)
+                {
+                    preX = qipan.X[qipan.num - 1];                //获取最后一颗棋子的横坐标
+                    preY = qipan.Y[qipan.num - 1];                //纵坐标
+                    prePlayer = qipan.player[preX, preY];         //该棋子的所有者
+
+                    if (qipan.fiveNum(preX, preY))
+                    {
+                        win[0]--;
+                        quit[prePlayer - 1] = false;
+                    }
+                    Eraser(preX, preY, prePlayer);                //用背景图像擦除最后一颗棋子
+                    qipan.retreat();                              //棋盘后退一步
+                    player.pre(1);                                //退回前一位玩家
+                    if (qipan.num > 0) drawpic(0, qipan.X[qipan.num - 1], qipan.Y[qipan.num - 1]);//在前一颗棋子上绘制标记
+                }
+            //Tip();                                        //提示
+        }
+
+
+        private void Eraser(int x, int y, int player)         //使用背景图像重新绘制棋盘的指定区域，实现棋盘上棋子的擦除
+        {
+            Image image1 = pictureBox1.BackgroundImage, image2 = image[player];
+            GraphicsUnit units = GraphicsUnit.Pixel;          //图像单元
+            int X = y * dis + border - dis / 2,               //计算像素横坐标
+                Y = x * dis + border - dis / 2;               //纵坐标
+
+            //因为pictureBox1的背景图像是拉伸显示的，所以在指定区域用背景擦出棋子时要计算出该擦出区域在背景图像中的对应区域
+            //double x0 = (double)image1.Width / pictureBox1.Width,   //计算横坐标拉伸比
+            //       y0 = (double)image1.Height / pictureBox1.Height; //纵坐标拉伸比
+
+            Rectangle desRect = new Rectangle(X, Y, (int)(image2.Width ), (int)(image2.Height )); //棋盘中要擦除的位置，s为放大倍数
+            Rectangle srcRect = new Rectangle((int)(X ), (int)(Y ), (int)(desRect.Width ), (int)(desRect.Height ));//计算在背景图像中的对应区域
+
+            g.DrawImage(image1, desRect, srcRect, units);     //用背景图像重画区域rect1
+
+            drawQipanLine(x, y);                              //重绘棋盘坐标(x, y)处周边的棋盘线
+        }
+
+        private void drawQipanLine(int x, int y)            //重绘棋盘坐标(x, y)处周边的棋盘线
+        {
+            int wid1 = 1, wid2 = 1;                              //分别标记水平线、垂直线的宽度
+
+            int X = border + dis * y,                       //计算水平像素
+                Y = border + dis * x;                       //垂直像素位置
+
+            if (x == 0 || x == M - 1) wid1 = 2;             //棋盘线宽度控制
+            if (y == 0 || y == N - 1) wid2 = 2;
+
+            int x1, x2, y1, y2;                             //棋盘线范围控制
+            y1 = (x == 0) ? Y : Y - dis / 2;                //0行处,垂直方向y1不可超过边界
+            y2 = (x == M - 1) ? Y : Y + dis / 2;            //最后一行
+            x1 = (y == 0) ? X : X - dis / 2;                //第一列
+            x2 = (y == N - 1) ? X : X + dis / 2;            //最后一列
+
+            pen1.Width = wid1;
+            g.DrawLine(pen1, x1, Y, x2, Y);                 //水平棋盘线
+
+            pen1.Width = wid2;
+            g.DrawLine(pen1, X, y1, X, y2);                 //竖直棋盘线
+        }
+
         private void drawpic(int pic, int x, int y)         //在棋盘上坐标(x,y)处绘制下标为pic的image图像
         {
             int X = y * dis + border - dis / 2,             //计算在棋盘上的像素横坐标
