@@ -44,5 +44,11 @@ namespace finalwork
             while (tmp < 1) tmp += num;
             return tmp;
         }
+        public int getfirst(int n)
+        {
+            num = n;
+            p = n;
+            return 0;
+        }
     }
 }
