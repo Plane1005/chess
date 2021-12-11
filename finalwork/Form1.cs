@@ -25,8 +25,13 @@ namespace finalwork
         public Graphics g;
         public Graphics gs;
         private string[] str = { "黑方", "白方" };
+        private bool[] auto;                                //标记个玩家是否已托管
         private bool[] quit;                                //标记各个玩家是否已经退出
         private int[] win;                                  //标记依次获胜的各个玩家
+        private Class1 lastX = new Class1();
+        private Class1 lastY = new Class1();
+
+
         public Form1()
         {
             InitializeComponent();
@@ -42,10 +47,31 @@ namespace finalwork
             pen1 = new Pen(Color.Black, 2);
             pen1.Width = 1;
             g = pictureBox1.CreateGraphics();               //在对象图片框中创建一个Graphics对象用于绘图
+            lastX.OnMyValueChanged += myclase1_OnMyValueChanged;
+            lastY.OnMyValueChanged += myclase2_OnMyValueChanged;
+            lastX.MyValue = 0;
+            lastY.MyValue = 0;
+            label3.Visible = false;
+            label5.Visible = false;
+            label4.Visible = false;
+            label6.Visible = false;
+            label7.Visible = false;
+
+
+
         }
+
+        private void myclase1_OnMyValueChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(lastX.MyValue + "**");
+        }
+        private void myclase2_OnMyValueChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(lastY.MyValue + "***");
+        }
+
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-
             pictureBox1.Width = (N - 1) * dis + 2 * border; //根据行列数设置棋盘大小
             pictureBox1.Height = (M - 1) * dis + 2 * border;
             g = e.Graphics;
@@ -76,9 +102,23 @@ namespace finalwork
             Y = (int)((e.X - border + dis / 2) / dis);      //列坐标
             //drawpic(1, X, Y);
             putChess(X, Y);
+            label4.Visible = true;
+            label5.Visible = true;
+            label3.Visible = true;
+            label6.Visible = true;
+            label7.Visible = true;
+            int a1 = lastX.MyValue + 1;
+            int a2 = lastY.MyValue + 1;
+            //int playerN = qipan.player[X, Y];
+            label3.Text = str[player.getNext(2) - 1];
+            label5.Text = a1 + "行" + a2 + "列";
+            label7.Text = str[player.getNext(1) - 1];
+            //Console.WriteLine(X+""+Y+""+ lastX.MyValue+""+ lastY.MyValue);
         }
         private void putChess(int x, int y)                 //玩家在棋盘上坐标(x,y)处落下棋子
         {
+            lastX.MyValue = x;
+            lastY.MyValue = y;
             label2.Text = "游戏开始";
             int preplayer;
             if (0 <= x && x < M && 0 <= y && y < N)         //下棋子的位置在棋盘之内时，在棋盘上绘制棋子
@@ -103,9 +143,15 @@ namespace finalwork
                         MessageBox.Show(str[playerN - 1] + "胜出");
                         if (DialogResult.Yes ==
                             MessageBox.Show("再来一盘？", "信息", MessageBoxButtons.YesNo))
-
+                        {
                             label2.Text = "游戏尚未开始";
-                        again();//再来一盘
+                            again();//再来一盘
+                        }
+                        else
+                        {
+                            Application.Exit();
+                        }
+
 
                     }
                     pass();                                 //下一位玩家下棋
@@ -137,7 +183,7 @@ namespace finalwork
             pictureBox1.Left = 0;
             pictureBox1.Top = 0;
             Height = Height - ClientSize.Height + pictureBox1.Height;
-            pass();
+            //pass();
         }
 
 
@@ -176,8 +222,8 @@ namespace finalwork
             //double x0 = (double)image1.Width / pictureBox1.Width,   //计算横坐标拉伸比
             //       y0 = (double)image1.Height / pictureBox1.Height; //纵坐标拉伸比
 
-            Rectangle desRect = new Rectangle(X, Y, (int)(image2.Width ), (int)(image2.Height )); //棋盘中要擦除的位置，s为放大倍数
-            Rectangle srcRect = new Rectangle((int)(X ), (int)(Y ), (int)(desRect.Width ), (int)(desRect.Height ));//计算在背景图像中的对应区域
+            Rectangle desRect = new Rectangle(X, Y, (int)(image2.Width), (int)(image2.Height)); //棋盘中要擦除的位置，s为放大倍数
+            Rectangle srcRect = new Rectangle((int)(X), (int)(Y), (int)(desRect.Width), (int)(desRect.Height));//计算在背景图像中的对应区域
 
             g.DrawImage(image1, desRect, srcRect, units);     //用背景图像重画区域rect1
 
@@ -206,6 +252,203 @@ namespace finalwork
             pen1.Width = wid2;
             g.DrawLine(pen1, X, y1, X, y2);                 //竖直棋盘线
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            pass();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Random ran = new Random();
+            int n = ran.Next(1, 8);
+            if (n == 1)
+            {
+                if (lastX.MyValue - 1 < 0||lastY.MyValue-1<0)
+                {
+                    n++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue - 1, lastY.MyValue - 1] == 0)
+                    {
+                        putChess(lastX.MyValue - 1, lastY.MyValue - 1);
+                    }
+                    else
+                    {
+                        n = 2;
+                    }
+                }
+            }
+            if (n == 2)
+            {
+                if (lastY.MyValue - 1 < 0)
+                {
+                    n++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue, lastY.MyValue - 1] == 0)
+                    {
+                        putChess(lastX.MyValue, lastY.MyValue - 1);
+                    }
+                    else
+                    {
+                        n = 3;
+                    }
+                }
+            }
+            if (n == 3)
+            {
+                if ( lastY.MyValue - 1 < 0||lastX.MyValue+1>17)
+                {
+                    n ++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue + 1, lastY.MyValue - 1] == 0)
+                    {
+                        putChess(lastX.MyValue + 1, lastY.MyValue - 1);
+                    }
+                    else
+                    {
+                        n = 4;
+                    }
+                }
+            }
+            if (n == 4)
+            {
+                if (lastX.MyValue - 1 < 0 )
+                {
+                    n ++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue - 1, lastY.MyValue] == 0)
+                    {
+                        putChess(lastX.MyValue - 1, lastY.MyValue);
+                    }
+                    else
+                    {
+                        n = 5;
+                    }
+                }
+            }
+            if (n == 5)
+            {
+                if (lastX.MyValue + 1 > 17 )
+                {
+                    n ++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue + 1, lastY.MyValue] == 0)
+                    {
+                        putChess(lastX.MyValue + 1, lastY.MyValue);
+                    }
+                    else
+                    {
+                        n = 6;
+                    }
+                }
+            }
+            if (n == 6)
+            {
+                if (lastX.MyValue - 1 < 0||lastY.MyValue+1>17)
+                {
+                    n++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue - 1, lastY.MyValue + 1] == 0)
+                    {
+                        putChess(lastX.MyValue - 1, lastY.MyValue + 1);
+                    }
+                    else
+                    {
+                        n = 7;
+                    }
+                }
+            }
+            if (n == 7)
+            {
+                if (lastY.MyValue + 1 > 17)
+                {
+                    n++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue, lastY.MyValue + 1] == 0)
+                    {
+                        putChess(lastX.MyValue, lastY.MyValue + 1);
+                    }
+                    else
+                    {
+                        n = 8;
+                    }
+                }
+            }
+            if (n == 8)
+            {
+                if (lastX.MyValue + 1 > 17 || lastY.MyValue + 1 > 17)
+                {
+                    n++;
+                }
+                else
+                {
+                    if (qipan.player[lastX.MyValue + 1, lastY.MyValue + 1] == 0)
+                    {
+                        putChess(lastX.MyValue + 1, lastY.MyValue + 1);
+                    }
+                    else
+                    {
+                        int s = 0;
+                        for (int i = 0; i < 18; i++)
+                        {
+                            if (s == 1)
+                            {
+                                break;
+                            }
+                            for (int j = 0; j < 18; j++)
+                            {
+                                if (s == 1)
+                                {
+                                    break;
+                                }
+                                if (qipan.player[i, j] == 0)
+                                {
+                                    putChess(i, j);
+                                    s = 1;
+                                    //break;
+
+                                }
+                            }
+                            //break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        //private void Tip()                                  //给出下一位玩家的提示信息
+        //{
+        //    int[] site;
+        //    if (quit[player.getNext(1) - 1]) { pass(); return; }//该玩家已退出时
+
+        //    if (auto[player.getNext(1) - 1])                //如果该玩家已托管则自动调用程序落棋
+        //    {   //获取最优落棋点
+
+        //        site = qipan.getBetterSite1(player.getNext(1), player.getNext(2));
+        //        putChess(site[0], site[1]);
+        //    }
+        //}
 
         private void drawpic(int pic, int x, int y)         //在棋盘上坐标(x,y)处绘制下标为pic的image图像
         {

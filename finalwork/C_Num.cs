@@ -48,7 +48,7 @@ namespace finalwork
         {
             num = n;
             p = n;
-            return 0;
+            return p;
         }
     }
 }
