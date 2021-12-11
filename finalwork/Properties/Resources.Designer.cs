@@ -60,7 +60,15 @@ namespace finalwork.Properties {
             }
         }
         
-
+        /// <summary>
+        ///   查找类似  的本地化字符串。
+        /// </summary>
+        //internal static string Resources {
+        //    get {
+        //        return ResourceManager.GetString("Resources", resourceCulture);
+        //    }
+        //}
+        
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
@@ -77,6 +85,56 @@ namespace finalwork.Properties {
         internal static System.Drawing.Bitmap 白棋 {
             get {
                 object obj = ResourceManager.GetObject("白棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 紫棋 {
+            get {
+                object obj = ResourceManager.GetObject("紫棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 红棋 {
+            get {
+                object obj = ResourceManager.GetObject("红棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 绿棋 {
+            get {
+                object obj = ResourceManager.GetObject("绿棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 蓝棋 {
+            get {
+                object obj = ResourceManager.GetObject("蓝棋", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 黄棋 {
+            get {
+                object obj = ResourceManager.GetObject("黄棋", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

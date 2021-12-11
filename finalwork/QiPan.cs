@@ -36,8 +36,6 @@ namespace finalwork
                 player[x, y] = player1;                     //记录棋子
                 X[num] = x;                                 //记录坐标
                 Y[num] = y;
-                //clearStyle(x, y);                           //清空该坐标处的棋型信息
-                //refreshStyle(x, y);                         //更新周边空位置棋型
                 num++;                                      //棋子计数
             }
         }

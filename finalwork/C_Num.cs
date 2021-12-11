@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 namespace finalwork
 {
     class C_Num                     //循环数,从1到Num再到1，循环变化
     {
         public int num, p;
-
         public C_Num(int n)
         {
             num = n;

@@ -93,5 +93,20 @@
   <ItemGroup>
     <None Include="Resources\标记.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\红棋.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\黄棋.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\蓝棋.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\绿棋.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\紫棋.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

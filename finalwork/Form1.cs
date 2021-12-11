@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,23 +15,23 @@ namespace finalwork
     {
         Pen pen1 = null;
         private C_Num player;
-        public Image[] image = {
-            finalwork.Properties.Resources.标记,
-            finalwork.Properties.Resources.黑棋,
-            finalwork.Properties.Resources.白棋};
+        public Image[] image = { finalwork.Properties.Resources.标记, null, null, };
         public int N = 18, M = 18;//规定绘制的棋盘的行和列
         public int dis = 30, radius = 8;//规定棋格的长度和棋子的长度
         public int border = 15;//棋盘和窗体的边距长度
         private QiPan qipan;
         public Graphics g;
         public Graphics gs;
-        private string[] str = { "黑方", "白方" };
+        private string[] str = { "", "" };
         private bool[] auto;                                //标记个玩家是否已托管
         private bool[] quit;                                //标记各个玩家是否已经退出
         private int[] win;                                  //标记依次获胜的各个玩家
         private Class1 lastX = new Class1();
         private Class1 lastY = new Class1();
+        private int firstplayer = 1;
+        private int secondplayer = 1;
 
+        public int Flag=0;
 
         public Form1()
         {
@@ -49,25 +50,19 @@ namespace finalwork
             g = pictureBox1.CreateGraphics();               //在对象图片框中创建一个Graphics对象用于绘图
             lastX.OnMyValueChanged += myclase1_OnMyValueChanged;
             lastY.OnMyValueChanged += myclase2_OnMyValueChanged;
-            lastX.MyValue = 0;
-            lastY.MyValue = 0;
+            lastX.MyValue = -1;
+            lastY.MyValue = -1;
             label3.Visible = false;
             label5.Visible = false;
             label4.Visible = false;
             label6.Visible = false;
             label7.Visible = false;
-
-
-
         }
-
         private void myclase1_OnMyValueChanged(object sender, EventArgs e)
         {
-            Console.WriteLine(lastX.MyValue + "**");
         }
         private void myclase2_OnMyValueChanged(object sender, EventArgs e)
         {
-            Console.WriteLine(lastY.MyValue + "***");
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -84,7 +79,6 @@ namespace finalwork
         }
         private void drawQiPan(Graphics g)
         {
-
             g.DrawRectangle(pen1, border, border, pictureBox1.Width - 2 * border, pictureBox1.Height - 2 * border);
             for (int i = border; i < (N - 1) * dis + border; i += dis)
             {
@@ -97,10 +91,99 @@ namespace finalwork
         }
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
+            if (Flag == 0)
+            {
+                if (comboBox1.SelectedItem == null)
+                {
+                    MessageBox.Show("请先选择先手方颜色");
+                }
+                else
+                {
+                    switch (comboBox1.SelectedItem)
+                    {
+                        case "黑色":
+                            image[1] = finalwork.Properties.Resources.黑棋;
+                            str[0] = "黑方";
+                            break;
+                        case "白色":
+                            image[1] = finalwork.Properties.Resources.白棋;
+                            str[0] = "白方";
+                            break;
+                        case "红色":
+                            image[1] = finalwork.Properties.Resources.红棋;
+                            str[0] = "红方";
+                            break;
+                        case "黄色":
+                            image[1] = finalwork.Properties.Resources.黄棋;
+                            str[0] = "黄方";
+                            break;
+                        case "蓝色":
+                            image[1] = finalwork.Properties.Resources.蓝棋;
+                            str[0] = "蓝方";
+                            break;
+                        case "绿色":
+                            image[1] = finalwork.Properties.Resources.绿棋;
+                            str[0] = "绿方";
+                            break;
+                        case "紫色":
+                            image[1] = finalwork.Properties.Resources.紫棋;
+                            str[0] = "紫方";
+                            break;
+                    }
+                }
+                if (comboBox2.SelectedItem == null)
+                {
+                    MessageBox.Show("请先选择后手方颜色");
+                }
+                else
+                {
+                    switch (comboBox2.SelectedItem)
+                    {
+                        case "黑色":
+                            image[2] = finalwork.Properties.Resources.黑棋;
+                            str[1] = "黑方";
+                            break;
+                        case "白色":
+                            image[2] = finalwork.Properties.Resources.白棋;
+                            str[1] = "白方";
+                            break;
+                        case "红色":
+                            image[2] = finalwork.Properties.Resources.红棋;
+                            str[1] = "红方";
+                            break;
+                        case "黄色":
+                            image[2] = finalwork.Properties.Resources.黄棋;
+                            str[1] = "黄方";
+                            break;
+                        case "蓝色":
+                            image[2] = finalwork.Properties.Resources.蓝棋;
+                            str[1] = "蓝方";
+                            break;
+                        case "绿色":
+                            image[2] = finalwork.Properties.Resources.绿棋;
+                            str[1] = "绿方";
+                            break;
+                        case "紫色":
+                            image[2] = finalwork.Properties.Resources.紫棋;
+                            str[1] = "紫方";
+                            break;
+                    }
+                }
+                if (comboBox2.SelectedItem == comboBox1.SelectedItem && comboBox1.SelectedItem != null)
+                {
+                    comboBox2.SelectedItem = null;
+                    MessageBox.Show("颜色重复！");
+                    return;
+                }
+                if (comboBox1.SelectedItem == null || comboBox2.SelectedItem == null)
+                {
+                    return;
+                }
+            }
+            Flag = 1;
             int X, Y;//用鼠标单击事件获取落子的坐标
             X = (int)((e.Y - border + dis / 2) / dis);      //计算在棋盘中的行坐标
             Y = (int)((e.X - border + dis / 2) / dis);      //列坐标
-            //drawpic(1, X, Y);
             putChess(X, Y);
             label4.Visible = true;
             label5.Visible = true;
@@ -109,11 +192,9 @@ namespace finalwork
             label7.Visible = true;
             int a1 = lastX.MyValue + 1;
             int a2 = lastY.MyValue + 1;
-            //int playerN = qipan.player[X, Y];
             label3.Text = str[player.getNext(2) - 1];
             label5.Text = a1 + "行" + a2 + "列";
             label7.Text = str[player.getNext(1) - 1];
-            //Console.WriteLine(X+""+Y+""+ lastX.MyValue+""+ lastY.MyValue);
         }
         private void putChess(int x, int y)                 //玩家在棋盘上坐标(x,y)处落下棋子
         {
@@ -139,8 +220,14 @@ namespace finalwork
 
                     if (qipan.fiveNum(x, y))                //当其中一方获胜时
                     {
+
                         int playerN = qipan.player[x, y];
                         MessageBox.Show(str[playerN - 1] + "胜出");
+                        if (DialogResult.Yes == MessageBox.Show("是否保存胜利截图？", "信息",
+                            MessageBoxButtons.YesNo))
+                        {
+                            PrtScreen();
+                        }
                         if (DialogResult.Yes ==
                             MessageBox.Show("再来一盘？", "信息", MessageBoxButtons.YesNo))
                         {
@@ -162,6 +249,31 @@ namespace finalwork
                 }
             }
         }
+
+        private void PrtScreen()
+        {
+            Screen scr = Screen.PrimaryScreen;
+            Rectangle rc = scr.Bounds;
+            int iWidth = rc.Width;
+            int iHeight = rc.Height;
+            //创建一个和屏幕一样大的Bitmap
+            Image myImage = new Bitmap(iWidth, iHeight);
+            //从一个继承自Image类的对象中创建Graphics对象
+            gs = Graphics.FromImage(myImage);
+            //抓屏并拷贝到myimage里
+            gs.CopyFromScreen(new Point(0, 0), new Point(0, 0), new Size(iWidth, iHeight));
+            //保存为文件
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "请选择文件路径";
+            string foldPath = "";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                foldPath = dialog.SelectedPath + @"/1.jpg";
+            }
+            myImage.Save(foldPath);
+        }
+
+
         private void pass()                                 //让一子 或 交出下子权给下一位玩家
         {
             if (player != null)
@@ -189,6 +301,32 @@ namespace finalwork
 
         private void button1_Click_1(object sender, EventArgs e)//悔棋
         {
+            if (str[player.getNext(2) - 1].Equals(str[0]))
+            {
+                if (firstplayer == 0)
+                {
+                    MessageBox.Show("无可用次数");
+                    return;
+                }
+                else
+                {
+                    firstplayer--;
+                    label13.Text = firstplayer + "";
+                }
+            }
+            if (str[player.getNext(2) - 1].Equals(str[1]))
+            {
+                if (secondplayer == 0)
+                {
+                    MessageBox.Show("无可用次数");
+                    return;
+                }
+                else
+                {
+                    secondplayer--;
+                    label12.Text = secondplayer + "";
+                }
+            }
             int preX, preY, prePlayer;
             for (int i = 0; i < 2; i++)
                 if (qipan.num > 0)
@@ -196,6 +334,12 @@ namespace finalwork
                     preX = qipan.X[qipan.num - 1];                //获取最后一颗棋子的横坐标
                     preY = qipan.Y[qipan.num - 1];                //纵坐标
                     prePlayer = qipan.player[preX, preY];         //该棋子的所有者
+                    int a1 = preX;
+                    int a2 = preY;
+                    //int playerN = qipan.player[X, Y];
+                    label3.Text = str[player.getNext(1) - 1];
+                    label5.Text = a1 + "行" + a2 + "列";
+                    label7.Text = str[player.getNext(2) - 1];
 
                     if (qipan.fiveNum(preX, preY))
                     {
@@ -207,7 +351,6 @@ namespace finalwork
                     player.pre(1);                                //退回前一位玩家
                     if (qipan.num > 0) drawpic(0, qipan.X[qipan.num - 1], qipan.Y[qipan.num - 1]);//在前一颗棋子上绘制标记
                 }
-            //Tip();                                        //提示
         }
 
 
@@ -217,16 +360,9 @@ namespace finalwork
             GraphicsUnit units = GraphicsUnit.Pixel;          //图像单元
             int X = y * dis + border - dis / 2,               //计算像素横坐标
                 Y = x * dis + border - dis / 2;               //纵坐标
-
-            //因为pictureBox1的背景图像是拉伸显示的，所以在指定区域用背景擦出棋子时要计算出该擦出区域在背景图像中的对应区域
-            //double x0 = (double)image1.Width / pictureBox1.Width,   //计算横坐标拉伸比
-            //       y0 = (double)image1.Height / pictureBox1.Height; //纵坐标拉伸比
-
             Rectangle desRect = new Rectangle(X, Y, (int)(image2.Width), (int)(image2.Height)); //棋盘中要擦除的位置，s为放大倍数
             Rectangle srcRect = new Rectangle((int)(X), (int)(Y), (int)(desRect.Width), (int)(desRect.Height));//计算在背景图像中的对应区域
-
             g.DrawImage(image1, desRect, srcRect, units);     //用背景图像重画区域rect1
-
             drawQipanLine(x, y);                              //重绘棋盘坐标(x, y)处周边的棋盘线
         }
 
@@ -255,16 +391,27 @@ namespace finalwork
 
         private void button3_Click(object sender, EventArgs e)
         {
+            label7.Text = str[player.getNext(2) - 1];
             pass();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            label3.Visible = true;
+            label4.Visible = true;
+            label5.Visible = true;
+            label6.Visible = true;
+            label7.Visible = true;
+            int a1 = lastX.MyValue + 1;
+            int a2 = lastY.MyValue + 1;
+            label3.Text = str[player.getNext(1) - 1];
+            label5.Text = a1 + "行" + a2 + "列";
+            label7.Text = str[player.getNext(2) - 1];
             Random ran = new Random();
             int n = ran.Next(1, 8);
             if (n == 1)
             {
-                if (lastX.MyValue - 1 < 0||lastY.MyValue-1<0)
+                if (lastX.MyValue - 1 < 0 || lastY.MyValue - 1 < 0)
                 {
                     n++;
                 }
@@ -300,9 +447,9 @@ namespace finalwork
             }
             if (n == 3)
             {
-                if ( lastY.MyValue - 1 < 0||lastX.MyValue+1>17)
+                if (lastY.MyValue - 1 < 0 || lastX.MyValue + 1 > 17)
                 {
-                    n ++;
+                    n++;
                 }
                 else
                 {
@@ -318,9 +465,9 @@ namespace finalwork
             }
             if (n == 4)
             {
-                if (lastX.MyValue - 1 < 0 )
+                if (lastX.MyValue - 1 < 0)
                 {
-                    n ++;
+                    n++;
                 }
                 else
                 {
@@ -336,9 +483,9 @@ namespace finalwork
             }
             if (n == 5)
             {
-                if (lastX.MyValue + 1 > 17 )
+                if (lastX.MyValue + 1 > 17)
                 {
-                    n ++;
+                    n++;
                 }
                 else
                 {
@@ -354,7 +501,7 @@ namespace finalwork
             }
             if (n == 6)
             {
-                if (lastX.MyValue - 1 < 0||lastY.MyValue+1>17)
+                if (lastX.MyValue - 1 < 0 || lastY.MyValue + 1 > 17)
                 {
                     n++;
                 }
@@ -434,22 +581,6 @@ namespace finalwork
         {
 
         }
-
-
-
-        //private void Tip()                                  //给出下一位玩家的提示信息
-        //{
-        //    int[] site;
-        //    if (quit[player.getNext(1) - 1]) { pass(); return; }//该玩家已退出时
-
-        //    if (auto[player.getNext(1) - 1])                //如果该玩家已托管则自动调用程序落棋
-        //    {   //获取最优落棋点
-
-        //        site = qipan.getBetterSite1(player.getNext(1), player.getNext(2));
-        //        putChess(site[0], site[1]);
-        //    }
-        //}
-
         private void drawpic(int pic, int x, int y)         //在棋盘上坐标(x,y)处绘制下标为pic的image图像
         {
             int X = y * dis + border - dis / 2,             //计算在棋盘上的像素横坐标
