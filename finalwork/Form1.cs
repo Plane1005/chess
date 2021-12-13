@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -30,8 +31,9 @@ namespace finalwork
         private Class1 lastY = new Class1();
         private int firstplayer = 1;
         private int secondplayer = 1;
+        private bool[,] flag = new bool[20, 20];//残局棋子生成
 
-        public int Flag=0;
+        public int Flag = 0;
 
         public Form1()
         {
@@ -58,13 +60,6 @@ namespace finalwork
             label6.Visible = false;
             label7.Visible = false;
         }
-        private void myclase1_OnMyValueChanged(object sender, EventArgs e)
-        {
-        }
-        private void myclase2_OnMyValueChanged(object sender, EventArgs e)
-        {
-        }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             pictureBox1.Width = (N - 1) * dis + 2 * border; //根据行列数设置棋盘大小
@@ -195,6 +190,14 @@ namespace finalwork
             label3.Text = str[player.getNext(2) - 1];
             label5.Text = a1 + "行" + a2 + "列";
             label7.Text = str[player.getNext(1) - 1];
+        }
+        private void myclase1_OnMyValueChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(lastX.MyValue);
+        }
+        private void myclase2_OnMyValueChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(lastY.MyValue);
         }
         private void putChess(int x, int y)                 //玩家在棋盘上坐标(x,y)处落下棋子
         {
@@ -581,6 +584,136 @@ namespace finalwork
         {
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Random n = new Random();
+            int a = n.Next(2, 3);
+            canju(a);
+        }
+
+        private void canju(int a)
+        {
+            if (Flag == 0)
+            {
+                if (comboBox1.SelectedItem == null)
+                {
+                    MessageBox.Show("请先选择先手方颜色");
+                }
+                else
+                {
+                    switch (comboBox1.SelectedItem)
+                    {
+                        case "黑色":
+                            image[1] = finalwork.Properties.Resources.黑棋;
+                            str[0] = "黑方";
+                            break;
+                        case "白色":
+                            image[1] = finalwork.Properties.Resources.白棋;
+                            str[0] = "白方";
+                            break;
+                        case "红色":
+                            image[1] = finalwork.Properties.Resources.红棋;
+                            str[0] = "红方";
+                            break;
+                        case "黄色":
+                            image[1] = finalwork.Properties.Resources.黄棋;
+                            str[0] = "黄方";
+                            break;
+                        case "蓝色":
+                            image[1] = finalwork.Properties.Resources.蓝棋;
+                            str[0] = "蓝方";
+                            break;
+                        case "绿色":
+                            image[1] = finalwork.Properties.Resources.绿棋;
+                            str[0] = "绿方";
+                            break;
+                        case "紫色":
+                            image[1] = finalwork.Properties.Resources.紫棋;
+                            str[0] = "紫方";
+                            break;
+                    }
+                }
+                if (comboBox2.SelectedItem == null)
+                {
+                    MessageBox.Show("请先选择后手方颜色");
+                }
+                else
+                {
+                    switch (comboBox2.SelectedItem)
+                    {
+                        case "黑色":
+                            image[2] = finalwork.Properties.Resources.黑棋;
+                            str[1] = "黑方";
+                            break;
+                        case "白色":
+                            image[2] = finalwork.Properties.Resources.白棋;
+                            str[1] = "白方";
+                            break;
+                        case "红色":
+                            image[2] = finalwork.Properties.Resources.红棋;
+                            str[1] = "红方";
+                            break;
+                        case "黄色":
+                            image[2] = finalwork.Properties.Resources.黄棋;
+                            str[1] = "黄方";
+                            break;
+                        case "蓝色":
+                            image[2] = finalwork.Properties.Resources.蓝棋;
+                            str[1] = "蓝方";
+                            break;
+                        case "绿色":
+                            image[2] = finalwork.Properties.Resources.绿棋;
+                            str[1] = "绿方";
+                            break;
+                        case "紫色":
+                            image[2] = finalwork.Properties.Resources.紫棋;
+                            str[1] = "紫方";
+                            break;
+                    }
+                }
+                if (comboBox2.SelectedItem == comboBox1.SelectedItem && comboBox1.SelectedItem != null)
+                {
+                    comboBox2.SelectedItem = null;
+                    MessageBox.Show("颜色重复！");
+                    return;
+                }
+                if (comboBox1.SelectedItem == null || comboBox2.SelectedItem == null)
+                {
+                    return;
+                }
+            }
+            Flag = 1;
+
+
+            for (int i = 0; i < a; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    int X, Y;
+                    do
+                    {
+                        Random ran = new Random();
+                        X = ran.Next(2, 17);
+                        Y = ran.Next(2, 17);
+                    } while (flag[X,Y]);
+                    flag[X, Y] = true;
+                    putChess(X, Y);
+
+                    label4.Visible = true;
+                    label5.Visible = true;
+                    label3.Visible = true;
+                    label6.Visible = true;
+                    label7.Visible = true;
+                    int a1 = lastX.MyValue + 1;
+                    int a2 = lastY.MyValue + 1;
+                    label3.Text = str[player.getNext(2) - 1];
+                    label5.Text = a1 + "行" + a2 + "列";
+                    label7.Text = str[player.getNext(1) - 1];
+                }
+            }
+        }
+
         private void drawpic(int pic, int x, int y)         //在棋盘上坐标(x,y)处绘制下标为pic的image图像
         {
             int X = y * dis + border - dis / 2,             //计算在棋盘上的像素横坐标
