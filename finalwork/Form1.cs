@@ -696,7 +696,7 @@ namespace finalwork
                         Random ran = new Random();
                         X = ran.Next(2, 17);
                         Y = ran.Next(2, 17);
-                    } while (flag[X,Y]);
+                    } while (flag[X, Y]);
                     flag[X, Y] = true;
                     putChess(X, Y);
 
